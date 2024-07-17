@@ -1,0 +1,1 @@
+export const DJANGO_BASE_ENDPOINTS=process.env.DJANGO_BASE_URL
