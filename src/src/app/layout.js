@@ -1,4 +1,6 @@
 import { ThemeProvider } from "@/components/theme-provider";
+import { AuthProvider } from "@/store/auth-provider";
+import { MessageProvider } from "@/store/message-provider";
 import Header from "@/components/Header";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -18,9 +20,13 @@ export default function RootLayout({ children }) {
             attribute="class"
             defaultTheme="dark"
           >
-            <Header>
-              {children}
-            </Header>
+            <AuthProvider>
+              <MessageProvider>
+                <Header>
+                  {children}
+                </Header>
+              </MessageProvider>
+            </AuthProvider>
           </ThemeProvider>
         </body>
     </html>

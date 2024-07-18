@@ -1,10 +1,9 @@
 "use client"
-import { useState, useEffect, Fragment } from "react";
+import { useState } from "react";
 import { emailIsValid } from "@/lib/utils";
-import { useAuth } from "@/store/auth-provider";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { AlertDemo } from "@/components/Allert";
+import { useRouter } from "next/navigation";
 import { useMessage } from "@/store/message-provider";
 import {
   Card,
@@ -16,23 +15,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-const LOGIN_INTERNAL_ENDPOINT = '/api/login/'
+const REGISTER_INTERNAL_ENDPOINT = '/api/register/'
 
 
 
 export default function Page() {
     const message = useMessage();
-    const auth = useAuth();
+    const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [messageState, setMessageState] = useState(null);
-
-    useEffect(() => {
-        setMessageState(message.loginMessage);
-        setTimeout(() => {
-            setMessageState(null);
-        }, 6000)
-    }, message)
 
     const formSubmitHandler = async(event) => {
         setIsLoading(true);
@@ -43,7 +34,12 @@ export default function Page() {
             return;
         }
         if (event.target.password.value.length < 8) {
-            setError("رمز عبور وارد شده بسیار کوتاه است.")
+            setError("رمز عبور وارد شده بسیار کوتاه است.");
+            setIsLoading(false);
+            return;
+        }
+        if (event.target.password.value !== event.target['confirm-password'].value) {
+            setError("رمز های عبور مطابقت ندارند.");
             setIsLoading(false);
             return;
         }
@@ -58,7 +54,7 @@ export default function Page() {
             body: jsonData
         }
 
-        const response = await fetch(LOGIN_INTERNAL_ENDPOINT, requestOptions);
+        const response = await fetch(REGISTER_INTERNAL_ENDPOINT, requestOptions);
 
         let data = {};
         try {
@@ -67,32 +63,40 @@ export default function Page() {
 
         }
         if (response.ok) {
-            console.log('LoggedIn');
-            setIsLoading(false);
-            auth.login(data?.email);
+            message.messageVerifyAcc("Registered Successfully");
+            router.replace('/verify-account/');
         } else {
-            setError('حساب فعالی با اطلاعات داده شده وجود ندارد.');
-            setIsLoading(false);
+            console.log(data);
+            if (data.password) {
+                if (data.password[0] === "Password must contain special character.") {
+                    setError("رمز عبور میبایست شامل حروف خاص باشد(@,$,...)");
+                    setIsLoading(false);
+                    return;
+                } else if (data.password[0] === "Password must contain letters.") {
+                    setError("رمز عبور میبایست شامل حروف باشد.");
+                    setIsLoading(false);
+                    return;
+                } else if (data.password[0] === "Password must contain numbers.") {
+                    setError("رمز عبور میبایست شامل اعداد باشد.");
+                    setIsLoading(false);
+                    return;
+                }
+                console.log(data.password[0])
+            } else if (data.detail === "User already exists!") {
+                setError("ایمیل وارد شده تکراریست.");
+                setIsLoading(false);
+                return;
+            }
             return;
         }
     }
 
-    const alertTitle = messageState === "Account verified...Login please" ? "اکانت شما با موفقیت فعال شد" : undefined;
-    const alertDescription = messageState === "Account verified...Login please" ? "لطفا وارد شوید." : undefined;
-
-
-
     return (
-        <Fragment>
-        {messageState && <AlertDemo 
-            title={alertTitle}
-            description={alertDescription} />
-        }
         <Card className="mx-auto max-w-sm">
         <CardHeader>
-            <CardTitle className="font-[Vazir-Medium] text-2xl">صفحه ورود</CardTitle>
+            <CardTitle className="font-[Vazir-Medium] text-2xl">ثبت نام</CardTitle>
             <CardDescription className="font-[Vazir-Medium]">
-            با ایمیل یا حساب گوگل خورد وارد شوید
+            با ایمیل یا حساب گوگل خود ثبت نام کنید
             </CardDescription>
         </CardHeader>
         <CardContent>
@@ -112,29 +116,31 @@ export default function Page() {
                 <div className="grid gap-2 mt-2">
                     <div className="flex gap-16 items-center">
                     <Label className="font-[Vazir-Medium]" htmlFor="password">رمز عبور</Label>
-                    <Link href="/reset-password/" className="font-[Vazir-Medium] ml-auto inline-block text-sm underline">
-                        رمز عبور خود را فراموش کرده اید؟
-                    </Link>
                     </div>
                     <Input id="password" name="password" type="password" required className="[direction:ltr]" />
                 </div>
+                <div className="grid gap-2 mt-2">
+                    <div className="flex gap-16 items-center">
+                    <Label className="font-[Vazir-Medium]" htmlFor="confirm-password">تکرار رمز عبور</Label>
+                    </div>
+                    <Input id="confirm-password" name="confirm-password" type="password" required className="[direction:ltr]" />
+                </div>
                 {error ? <p className="mt-2 w-full font-[Vazir-Medium] text-red-700">{error}</p> : undefined}
                 <Button disabled={isLoading} type="submit" className="mt-2 w-full font-[Vazir-Medium]">
-                    {isLoading ? "صبر کنید" : "ورود" }
+                    {isLoading ? "صبر کنید" : "ثبت نام" }
                 </Button>
             </form>
             <Button variant="outline" className="w-full font-[Vazir-Medium]">
-                ورود با حساب گوگل
+                ثبت نام با حساب گوگل
             </Button>
             </div>
             <div className="mt-4 text-center text-sm font-[Vazir-Medium]">
-            حساب کاربری ندارید؟
-            <Link href="/register/" className="underline">
-                ثبت نام
+            حساب کاربری دارید؟
+            <Link href="/login/" className="underline">
+                ورود
             </Link>
             </div>
         </CardContent>
         </Card>
-    </Fragment>
     )
 }

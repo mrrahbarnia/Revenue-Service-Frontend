@@ -3,7 +3,7 @@
 import { NextResponse } from "next/server";
 import { DJANGO_BASE_ENDPOINTS } from "@/config/defaults";
 
-const REGISTER_EXTERNAL_ENDPOINT = `${DJANGO_BASE_ENDPOINTS}/users/register/`;
+const RESET_PASSWORD_VERIFY_EXTERNAL_ENDPOINT = `${DJANGO_BASE_ENDPOINTS}/users/reset-password/verify/`;
 
 export async function POST(request) {
     const requestData = await request.json()
@@ -14,17 +14,13 @@ export async function POST(request) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            email: requestData['email'],
-            password: requestData['password'],
-            confirm_password: requestData['confirm-password']
+            received_password: requestData.password
         })
     }
-    const response = await fetch(REGISTER_EXTERNAL_ENDPOINT, requestOptions);
+    const response = await fetch(RESET_PASSWORD_VERIFY_EXTERNAL_ENDPOINT, requestOptions);
     const jsonResponse = await response.json();
-
     if (response.ok) {
-        return NextResponse.json({"signedUp": true}, {status: 201})
+        return NextResponse.json({"verified": true}, {status: 200})
     }
-
     return NextResponse.json({...jsonResponse}, {status: 400})
 };
