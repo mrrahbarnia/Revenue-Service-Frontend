@@ -88,7 +88,7 @@ export default function Page() {
                     />
                 </div>
                 {error ? <p className="mt-2 w-full font-[Vazir-Medium] text-red-700">{error}</p> : undefined}
-                <Button disabled={isLoading} type="submit" className="mt-2 w-full font-[Vazir-Medium]">
+                <Button disabled={isLoading} type="submit" className="bg-purple-800 mt-2 w-full font-[Vazir-Medium]">
                     {isLoading ? "صبر کنید" : "بازیابی" }
                 </Button>
             </form>

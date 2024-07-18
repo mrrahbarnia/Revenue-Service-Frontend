@@ -77,8 +77,8 @@ export default function Page() {
         }
     }
 
-    const alertTitle = messageState === "Account verified...Login please" ? "اکانت شما با موفقیت فعال شد" : undefined;
-    const alertDescription = messageState === "Account verified...Login please" ? "لطفا وارد شوید." : undefined;
+    const alertTitle = messageState === "Account verified...Login please" ? "اکانت شما با موفقیت فعال شد" : "Password Changed Successfully." ? "رمز عبور با  موفقیت تغییر کرد" : undefined;
+    const alertDescription = messageState === "Account verified...Login please" ? "لطفا وارد شوید." : "Password Changed Successfully." ? "لطفا با رمز عبور جدید وارد شوید." : undefined;
 
 
 
@@ -119,11 +119,11 @@ export default function Page() {
                     <Input id="password" name="password" type="password" required className="[direction:ltr]" />
                 </div>
                 {error ? <p className="mt-2 w-full font-[Vazir-Medium] text-red-700">{error}</p> : undefined}
-                <Button disabled={isLoading} type="submit" className="mt-2 w-full font-[Vazir-Medium]">
+                <Button disabled={isLoading} type="submit" className="bg-purple-800 mt-2 w-full font-[Vazir-Medium]">
                     {isLoading ? "صبر کنید" : "ورود" }
                 </Button>
             </form>
-            <Button variant="outline" className="w-full font-[Vazir-Medium]">
+            <Button className="bg-purple-800 w-full font-[Vazir-Medium]">
                 ورود با حساب گوگل
             </Button>
             </div>

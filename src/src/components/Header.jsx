@@ -34,6 +34,18 @@ export default function Header({children}) {
           >
             خانه
           </Link>
+          <Link
+            href="/login/"
+            className="font-['Vazir-Medium'] text-foreground transition-colors hover:text-foreground"
+          >
+            ورود
+          </Link>
+          <Link
+            href="/register/"
+            className="font-['Vazir-Medium'] "
+          >
+            ثبت نام
+          </Link>
         </nav>
         <Sheet>
           <SheetTrigger asChild>

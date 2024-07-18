@@ -1,5 +1,6 @@
 "use server"
 
+import { setToken, setRefreshToken } from "@/lib/auth";
 import { NextResponse } from "next/server";
 import { DJANGO_BASE_ENDPOINTS } from "@/config/defaults";
 
@@ -20,7 +21,8 @@ export async function POST(request) {
 
     if (response.ok) {
         const {email, access, refresh} = jsonResponse
-
+        setToken(access);
+        setRefreshToken(refresh);
         return NextResponse.json({"loggedIn": true, "email": email}, {status: 200})
     }
 

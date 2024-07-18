@@ -34,7 +34,7 @@ export default function Page() {
             return;
         }
         if (event.target.password.value.length < 8) {
-            setError("رمز عبور وارد شده بسیار کوتاه است.");
+            setError("رمز عبور میبایست حداقل هشت کاراکتر باشد.");
             setIsLoading(false);
             return;
         }
@@ -126,11 +126,11 @@ export default function Page() {
                     <Input id="confirm-password" name="confirm-password" type="password" required className="[direction:ltr]" />
                 </div>
                 {error ? <p className="mt-2 w-full font-[Vazir-Medium] text-red-700">{error}</p> : undefined}
-                <Button disabled={isLoading} type="submit" className="mt-2 w-full font-[Vazir-Medium]">
+                <Button disabled={isLoading} type="submit" className="bg-purple-800 mt-2 w-full font-[Vazir-Medium]">
                     {isLoading ? "صبر کنید" : "ثبت نام" }
                 </Button>
             </form>
-            <Button variant="outline" className="w-full font-[Vazir-Medium]">
+            <Button className="bg-purple-800 w-full font-[Vazir-Medium]">
                 ثبت نام با حساب گوگل
             </Button>
             </div>

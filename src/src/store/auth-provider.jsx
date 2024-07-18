@@ -1,5 +1,5 @@
 "use client"
-import { usePathname, useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState, useEffect, useContext, createContext } from "react";
 
 const AuthContext = createContext(null);
@@ -12,7 +12,6 @@ export const AuthProvider = ({children}) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [email, setEmail] = useState("");
     const router = useRouter();
-    const searchParams = useSearchParams();
 
     useEffect(() => {
         const storedAuthStatus = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -33,18 +32,32 @@ export const AuthProvider = ({children}) => {
             localStorage.setItem(LOCAL_STORAGE_EMAIL_KEY, email);
             setEmail(email);
         }
-        const nextUrl = searchParams.get('next');
-        const inValidNextUrls = ['/login', '/logout'];
-        const validNextUrl = nextUrl && nextUrl.startsWith('/') && !inValidNextUrls.includes(nextUrl);
-        if (validNextUrl) {
-            router.replace(nextUrl)
-        } else {
-            router.replace(LOGIN_REDIRECT_URL)
-        }
+        router.replace(LOGIN_REDIRECT_URL)
+        // const nextUrl = searchParams.get('next');
+        // const inValidNextUrls = ['/login', '/logout'];
+        // const validNextUrl = nextUrl && nextUrl.startsWith('/') && !inValidNextUrls.includes(nextUrl);
+        // if (validNextUrl) {
+        //     router.replace(nextUrl)
+        // } else {
+        //     router.replace(LOGIN_REDIRECT_URL)
+        // }
+    }
+
+    const unauthorizedRedirect = () => {
+        localStorage.setItem(LOCAL_STORAGE_KEY, "0");
+        localStorage.removeItem(LOCAL_STORAGE_EMAIL_KEY);
+        setIsAuthenticated(false);
+        return router.replace("/login/")
+    }
+
+    const logout = () => {
+        setIsAuthenticated(false);
+        localStorage.setItem(LOCAL_STORAGE_KEY, "0");
+        return localStorage.removeItem(LOCAL_STORAGE_EMAIL_KEY);
     }
 
 
-    return <AuthContext.Provider value={{isAuthenticated, email, login}}>
+    return <AuthContext.Provider value={{isAuthenticated, email, login, unauthorizedRedirect, logout}}>
         {children}
     </AuthContext.Provider>
 }
