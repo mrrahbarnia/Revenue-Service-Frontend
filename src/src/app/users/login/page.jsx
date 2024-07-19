@@ -67,7 +67,6 @@ export default function Page() {
 
         }
         if (response.ok) {
-            console.log('LoggedIn');
             setIsLoading(false);
             auth.login(data?.email);
         } else {
@@ -77,10 +76,8 @@ export default function Page() {
         }
     }
 
-    const alertTitle = messageState === "Account verified...Login please" ? "اکانت شما با موفقیت فعال شد" : "Password Changed Successfully." ? "رمز عبور با  موفقیت تغییر کرد" : undefined;
-    const alertDescription = messageState === "Account verified...Login please" ? "لطفا وارد شوید." : "Password Changed Successfully." ? "لطفا با رمز عبور جدید وارد شوید." : undefined;
-
-
+    const alertTitle = messageState === "Account verified...Login please" ? "اکانت شما با موفقیت فعال شد" : "Password Changed Successfully." ? "رمز عبور با  موفقیت تغییر کرد" : "Authentication required!" ? "عدم دسترسی" : undefined;
+    const alertDescription = messageState === "Account verified...Login please" ? "لطفا وارد شوید." : "Password Changed Successfully." ? "لطفا با رمز عبور جدید وارد شوید." : "Authentication required!" ? "برای دسترسی به این صفحه ابتدا باید وارد شوید." : undefined;
 
     return (
         <Fragment>
@@ -112,7 +109,7 @@ export default function Page() {
                 <div className="grid gap-2 mt-2">
                     <div className="flex gap-16 items-center">
                     <Label className="font-[Vazir-Medium]" htmlFor="password">رمز عبور</Label>
-                    <Link href="/reset-password/" className="font-[Vazir-Medium] ml-auto inline-block text-sm underline">
+                    <Link href="/users/reset-password/" className="font-[Vazir-Medium] ml-auto inline-block text-sm underline">
                         رمز عبور خود را فراموش کرده اید؟
                     </Link>
                     </div>
@@ -129,7 +126,7 @@ export default function Page() {
             </div>
             <div className="mt-4 text-center text-sm font-[Vazir-Medium]">
             حساب کاربری ندارید؟
-            <Link href="/register/" className="underline">
+            <Link href="/users/register/" className="underline">
                 ثبت نام
             </Link>
             </div>

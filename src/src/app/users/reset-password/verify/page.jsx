@@ -55,7 +55,7 @@ export default function Page() {
         }
         if (response.ok) {
             // TODO: Login and navigate to change password
-            router.replace('/change-password/');
+            router.replace('/users/change-password/');
         } else {
             if (data.detail === "Random password is invalid!(Expired or wrong)") {
                 setError("رمز وارد شده یا اشتباه است یا منقضی شده است!لطفا رمز عبور جدید بگیرید.")
@@ -67,7 +67,7 @@ export default function Page() {
     }
 
     const clickHandler = () => {
-        router.replace("/reset-password/")
+        router.replace("/users/reset-password/")
     }
 
     const alertTitle = messageState === "Random password sent." ? "رمز عبور موقت ارسال شد." : undefined;

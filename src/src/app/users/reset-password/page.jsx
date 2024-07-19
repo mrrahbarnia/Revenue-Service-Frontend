@@ -1,9 +1,9 @@
 "use client"
 import { useState } from "react";
 import { emailIsValid } from "@/lib/utils";
-import { useMessage } from "@/store/message-provider";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { useMessage } from "@/store/message-provider";
 import {
   Card,
   CardContent,
@@ -14,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-const RESEND_VERIFICATION_INTERNAL_ENDPOINT = '/api/resend-verification/'
+const RESET_PASSWORD_INTERNAL_ENDPOINT = '/api/reset-password/'
 
 
 export default function Page() {
@@ -44,7 +44,7 @@ export default function Page() {
             return;
         }
 
-        const response = await fetch(RESEND_VERIFICATION_INTERNAL_ENDPOINT, requestOptions);
+        const response = await fetch(RESET_PASSWORD_INTERNAL_ENDPOINT, requestOptions);
 
         let data = {};
         try {
@@ -53,15 +53,9 @@ export default function Page() {
 
         }
         if (response.ok) {
-            message.messageVerifyAcc("Email resent successfully");
-            router.replace('/verify-account/');
+            message.messageResetPasswordVerify("Random password sent.");
+            router.replace('/users/reset-password/verify/');
         } else {
-            if (data.detail === 'User has already been verified!') {
-                setError("ایمیل وارد شده قبلا تأیید شده است.")
-                event.target.email.value = '';
-                setIsLoading(false);
-                return;
-            }
             if (data.detail === 'Not active account found!') {
                 setError("حساب کاربری با ایمیل وارد شده یافت نشد.")
                 event.target.email.value = '';
@@ -74,9 +68,9 @@ export default function Page() {
     return (
         <Card className="mx-auto max-w-sm">
         <CardHeader>
-            <CardTitle className="font-[Vazir-Medium] text-2xl">ارسال دوباره ایمیل</CardTitle>
+            <CardTitle className="font-[Vazir-Medium] text-2xl">بازیابی رمز عبور</CardTitle>
             <CardDescription className="font-[Vazir-Medium]">
-                ایمیلی که با آن ثبت نام کردید را وارد کنید.
+                ایمیل خود را وارد کنید.
             </CardDescription>
         </CardHeader>
         <CardContent>
@@ -95,7 +89,7 @@ export default function Page() {
                 </div>
                 {error ? <p className="mt-2 w-full font-[Vazir-Medium] text-red-700">{error}</p> : undefined}
                 <Button disabled={isLoading} type="submit" className="bg-purple-800 mt-2 w-full font-[Vazir-Medium]">
-                    {isLoading ? "صبر کنید" : "ارسال" }
+                    {isLoading ? "صبر کنید" : "بازیابی" }
                 </Button>
             </form>
             </div>

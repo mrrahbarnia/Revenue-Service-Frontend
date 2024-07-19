@@ -33,7 +33,7 @@ export default function Page() {
     }, message)
 
     const resendCodeHandler = () => {
-        router.replace("/resend-verification/")
+        router.replace("/users/resend-verification/")
     }
 
     const formSubmitHandler = async(event) => {
@@ -60,7 +60,7 @@ export default function Page() {
         }
         if (response.ok) {
             message.messageLogin("Account verified...Login please");
-            router.replace('/login/');
+            router.replace('/users/login/');
         } else {
             setError("کد تأییدیه معتبر نمیباشد,کد جدید بگیرید.")
             event.target['verification-code'].value = '';

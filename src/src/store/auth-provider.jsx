@@ -47,7 +47,13 @@ export const AuthProvider = ({children}) => {
         localStorage.setItem(LOCAL_STORAGE_KEY, "0");
         localStorage.removeItem(LOCAL_STORAGE_EMAIL_KEY);
         setIsAuthenticated(false);
-        return router.replace("/login/")
+        return router.replace("/users/login/")
+    }
+
+    const checkAuthenticationState = () => {
+        if (!isAuthenticated) {
+            return unauthorizedRedirect();
+        }
     }
 
     const logout = () => {
@@ -57,7 +63,11 @@ export const AuthProvider = ({children}) => {
     }
 
 
-    return <AuthContext.Provider value={{isAuthenticated, email, login, unauthorizedRedirect, logout}}>
+    return <AuthContext.Provider value={
+        {isAuthenticated, email,
+        login, unauthorizedRedirect, logout,
+        checkAuthenticationState, checkAuthenticationState}
+    }>
         {children}
     </AuthContext.Provider>
 }
